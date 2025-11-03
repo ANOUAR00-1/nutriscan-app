@@ -11,6 +11,9 @@ module.exports = {
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     extra: {
+      eas: {
+        projectId: "624ed693-0014-49d4-882c-1d93d8fe3cd9"
+      },
       OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
       OPENROUTER_API_KEY_BACKUP_1: process.env.OPENROUTER_API_KEY_BACKUP_1,
       OPENROUTER_API_KEY_BACKUP_2: process.env.OPENROUTER_API_KEY_BACKUP_2,

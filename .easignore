@@ -1,0 +1,15 @@
+# Ignore Bun lockfile - EAS uses npm
+bun.lock
+
+# Ignore local development files
+.env.local
+.env.development.local
+
+# Ignore test files
+**/*.test.ts
+**/*.test.tsx
+**/__tests__/
+
+# Ignore docs
+*.md
+!README.md

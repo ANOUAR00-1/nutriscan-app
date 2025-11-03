@@ -20,6 +20,7 @@
     },
     "preview": {
       "distribution": "internal",
+      "node": "20.17.0",
       "ios": {
         "simulator": false,
         "resourceClass": "m-medium"
@@ -34,8 +35,7 @@
     },
     "production": {
       "ios": {
-        "resourceClass": "m-medium",
-        "bundleIdentifier": "com.nutriscan.app"
+        "resourceClass": "m-medium"
       },
       "android": {
         "buildType": "apk",
