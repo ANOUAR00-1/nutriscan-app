@@ -13,6 +13,8 @@ import type { FoodItem, NutritionData, HealthAnalysis, MealScan } from "@/types/
 // ===========================================
 // 🎯 PRIMARY PROVIDER: Z.AI (ACTIVE!)
 // ===========================================
+// NOTE: Z.AI works on mobile apps but may have CORS issues on web browsers
+// The app automatically falls back to OpenRouter if Z.AI is blocked
 const ZAI_API_KEY = 'f4f86e69868943019d157c4198f5bd6a.6AWer6XEgWpmjPCW';
 const ZAI_API_URL = 'https://api.z.ai/v1/chat/completions';
 
@@ -267,23 +269,35 @@ Begin analysis now:`;
     const config = getApiConfig();
     console.log(`🚀 Sending request to ${config.provider === 'zai' ? 'Z.AI' : 'OpenRouter'}...`);
 
-    // Call AI API with current provider
-    const response = await fetch(config.apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://nutriscan.app',
-        'X-Title': 'NutriScan',
-      },
-      body: JSON.stringify({
-        model: config.provider === 'zai' ? 'gpt-4o-mini' : PRIMARY_MODEL,  // Z.AI uses gpt-4o-mini
-        messages: messages,
-        temperature: 0.3,
-        max_tokens: 2000,
-        response_format: { type: "json_object" },
-      }),
-    });
+    // Call AI API with current provider (wrapped in try-catch for CORS/network errors)
+    let response: Response;
+    try {
+      response = await fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://nutriscan.app',
+          'X-Title': 'NutriScan',
+        },
+        body: JSON.stringify({
+          model: config.provider === 'zai' ? 'gpt-4o-mini' : PRIMARY_MODEL,  // Z.AI uses gpt-4o-mini
+          messages: messages,
+          temperature: 0.3,
+          max_tokens: 2000,
+          response_format: { type: "json_object" },
+        }),
+      });
+    } catch (networkError) {
+      // CORS or network error - switch to backup provider
+      console.error(`❌ ${config.provider.toUpperCase()} network error (likely CORS):`, networkError);
+      if (config.provider === 'zai') {
+        console.warn("🔄 Z.AI blocked by CORS (browser limitation), switching to OpenRouter...");
+        switchToBackupProvider();
+        return await analyzeFoodImage(imageUri, model);
+      }
+      throw new Error(`Network error: ${networkError instanceof Error ? networkError.message : 'Failed to fetch'}`);
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
