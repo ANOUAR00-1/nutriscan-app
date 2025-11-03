@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { TrendingUp, Target, Calendar, Award, Flame, Apple } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMeals } from "@/contexts/MealsContext";
 import { useUser } from "@/contexts/UserContext";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
+import { Shadows } from "@/constants/shadows";
 import { useMemo } from "react";
 
 export default function DashboardScreen() {
@@ -77,16 +79,39 @@ export default function DashboardScreen() {
     <ScrollView
       style={[styles.container, { backgroundColor: colors.backgroundGray }]}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}
+      showsVerticalScrollIndicator={false}
     >
-      <View style={styles.header}>
-        <View>
-          <Text style={[styles.greeting, { color: colors.text }]}>Hello, {profile.name}! 👋</Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Here's your nutrition overview</Text>
+      {/* Hero Header with Gradient */}
+      <LinearGradient
+        colors={[colors.primary, colors.secondary]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.heroCard, Shadows.lg]}
+      >
+        <View style={styles.heroContent}>
+          <Text style={styles.greeting}>Hello, {profile.name}! 👋</Text>
+          <Text style={styles.heroSubtitle}>Here's your nutrition overview</Text>
         </View>
-      </View>
+        <View style={styles.heroStats}>
+          <View style={styles.heroStatItem}>
+            <Text style={styles.heroStatValue}>{todayStats.mealsCount}</Text>
+            <Text style={styles.heroStatLabel}>Meals Today</Text>
+          </View>
+          <View style={[styles.heroDivider, { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
+          <View style={styles.heroStatItem}>
+            <Text style={styles.heroStatValue}>{todayStats.calories}</Text>
+            <Text style={styles.heroStatLabel}>Calories</Text>
+          </View>
+          <View style={[styles.heroDivider, { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
+          <View style={styles.heroStatItem}>
+            <Text style={styles.heroStatValue}>{Math.round(calorieProgress)}%</Text>
+            <Text style={styles.heroStatLabel}>Progress</Text>
+          </View>
+        </View>
+      </LinearGradient>
 
       {/* Today's Progress */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <Target size={20} color={colors.primary} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('dailyGoals')}</Text>
@@ -184,7 +209,7 @@ export default function DashboardScreen() {
       </View>
 
       {/* Weekly Overview */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <Calendar size={20} color={colors.secondary} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('weeklyStats')}</Text>
@@ -210,8 +235,8 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      {/* Quick Actions */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      {/* Insights */}
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <Award size={20} color={colors.success} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('insights')}</Text>
@@ -257,22 +282,57 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 32,
-    gap: 16,
+    gap: 20,
   },
-  header: {
+  heroCard: {
+    borderRadius: 24,
+    padding: 24,
     marginBottom: 8,
   },
+  heroContent: {
+    marginBottom: 20,
+  },
   greeting: {
+    fontSize: 32,
+    fontWeight: "800" as const,
+    color: "#FFF",
+    marginBottom: 6,
+    letterSpacing: -0.5,
+  },
+  heroSubtitle: {
+    fontSize: 16,
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "500" as const,
+  },
+  heroStats: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,0.2)",
+  },
+  heroStatItem: {
+    alignItems: "center",
+  },
+  heroStatValue: {
     fontSize: 28,
     fontWeight: "700" as const,
+    color: "#FFF",
     marginBottom: 4,
   },
-  subtitle: {
-    fontSize: 16,
+  heroStatLabel: {
+    fontSize: 12,
+    color: "rgba(255,255,255,0.8)",
+    fontWeight: "500" as const,
+  },
+  heroDivider: {
+    width: 1,
+    height: 40,
   },
   section: {
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 20,
+    padding: 20,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -304,13 +364,13 @@ const styles = StyleSheet.create({
     fontWeight: "700" as const,
   },
   progressBar: {
-    height: 8,
-    borderRadius: 4,
+    height: 10,
+    borderRadius: 10,
     overflow: "hidden",
   },
   progressFill: {
     height: "100%",
-    borderRadius: 4,
+    borderRadius: 10,
   },
   statsGrid: {
     flexDirection: "row",
@@ -318,8 +378,8 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 16,
     alignItems: "center",
   },
   statValue: {
@@ -332,8 +392,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   insightCard: {
-    padding: 14,
-    borderRadius: 12,
+    padding: 16,
+    borderRadius: 16,
     marginTop: 8,
   },
   insightText: {

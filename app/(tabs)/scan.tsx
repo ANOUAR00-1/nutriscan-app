@@ -8,7 +8,9 @@ import {
   Alert,
   Platform,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { Camera, ImageIcon, Sparkles } from "lucide-react-native";
 import { useRouter } from "expo-router";
@@ -17,6 +19,7 @@ import { useMeals } from "@/contexts/MealsContext";
 import { analyzeFoodImage } from "@/utils/foodAnalyzer";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
+import { Shadows } from "@/constants/shadows";
 
 export default function ScanScreen() {
   const router = useRouter();
@@ -42,6 +45,7 @@ export default function ScanScreen() {
   };
 
   const handleTakePhoto = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const hasPermission = await requestPermissions();
     if (!hasPermission) return;
 
@@ -58,6 +62,7 @@ export default function ScanScreen() {
   };
 
   const handlePickImage = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: "images" as any,
       allowsEditing: true,
@@ -73,6 +78,7 @@ export default function ScanScreen() {
   const handleAnalyze = async () => {
     if (!selectedImage) return;
 
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setIsAnalyzingLocal(true);
     setAnalyzing(true);
 
@@ -110,18 +116,27 @@ export default function ScanScreen() {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.primary }]}
               onPress={handleTakePhoto}
-              activeOpacity={0.7}
+              activeOpacity={0.9}
+              style={[styles.modernButton, Shadows.lg]}
             >
-              <Camera size={24} color="#FFF" strokeWidth={2} />
-              <Text style={styles.primaryButtonText}>{t('takePhoto')}</Text>
+              <LinearGradient
+                colors={[colors.primary, colors.secondary]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.gradientButton}
+              >
+                <View style={styles.iconCircle}>
+                  <Camera size={28} color="#FFF" strokeWidth={2.5} />
+                </View>
+                <Text style={styles.primaryButtonText}>{t('takePhoto')}</Text>
+              </LinearGradient>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.background, borderWidth: 2, borderColor: colors.border }]}
+              style={[styles.secondaryButton, { backgroundColor: colors.surface, borderColor: colors.border }, Shadows.md]}
               onPress={handlePickImage}
-              activeOpacity={0.7}
+              activeOpacity={0.8}
             >
               <ImageIcon size={24} color={colors.primary} strokeWidth={2} />
               <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>{t('chooseGallery')}</Text>
@@ -134,28 +149,38 @@ export default function ScanScreen() {
 
           <View style={styles.actionsContainer}>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.background, borderWidth: 2, borderColor: colors.border }]}
-              onPress={() => setSelectedImage(null)}
-              activeOpacity={0.7}
+              style={[styles.changeButton, { backgroundColor: colors.surface, borderColor: colors.border }, Shadows.md]}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setSelectedImage(null);
+              }}
+              activeOpacity={0.8}
               disabled={isAnalyzing}
             >
-              <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>Change Photo</Text>
+              <Text style={[styles.changeButtonText, { color: colors.text }]}>Change Photo</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.primary }]}
               onPress={handleAnalyze}
-              activeOpacity={0.7}
+              activeOpacity={0.9}
               disabled={isAnalyzing}
+              style={[styles.analyzeButton, Shadows.primary]}
             >
-              {isAnalyzing ? (
-                <ActivityIndicator color="#FFF" />
-              ) : (
-                <>
-                  <Sparkles size={24} color="#FFF" strokeWidth={2} />
-                  <Text style={styles.primaryButtonText}>{t('analyzeFood')}</Text>
-                </>
-              )}
+              <LinearGradient
+                colors={isAnalyzing ? [colors.textLight, colors.textSecondary] : [colors.primary, colors.secondary]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.gradientButton}
+              >
+                {isAnalyzing ? (
+                  <ActivityIndicator color="#FFF" size="small" />
+                ) : (
+                  <>
+                    <Sparkles size={24} color="#FFF" strokeWidth={2} />
+                    <Text style={styles.primaryButtonText}>{t('analyzeFood')}</Text>
+                  </>
+                )}
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         </View>
@@ -183,33 +208,55 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700" as const,
+    fontSize: 32,
+    fontWeight: "800" as const,
     marginBottom: 8,
     textAlign: "center",
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 17,
     textAlign: "center",
     marginBottom: 40,
-    lineHeight: 24,
+    lineHeight: 26,
   },
   buttonContainer: {
     width: "100%",
     gap: 16,
   },
-  button: {
+  modernButton: {
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  gradientButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 24,
-    borderRadius: 16,
+    gap: 12,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  secondaryButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    borderWidth: 2,
     gap: 12,
   },
   primaryButtonText: {
-    fontSize: 17,
-    fontWeight: "600" as const,
+    fontSize: 18,
+    fontWeight: "700" as const,
     color: "#FFF",
   },
   secondaryButtonText: {
@@ -225,8 +272,23 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     flex: 1,
-    padding: 20,
+    padding: 24,
     gap: 12,
     justifyContent: "center",
+  },
+  changeButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    borderWidth: 2,
+    alignItems: "center",
+  },
+  changeButtonText: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+  },
+  analyzeButton: {
+    borderRadius: 20,
+    overflow: "hidden",
   },
 });

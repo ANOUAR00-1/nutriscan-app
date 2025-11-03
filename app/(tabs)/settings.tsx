@@ -15,6 +15,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useMeals } from "@/contexts/MealsContext";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
+import { Shadows } from "@/constants/shadows";
 import { useState, useEffect } from "react";
 
 export default function SettingsScreen() {
@@ -78,7 +79,7 @@ export default function SettingsScreen() {
       <Text style={[styles.mainTitle, { color: colors.text }]}>{t('settings')}</Text>
 
       {/* Profile Section */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <User size={20} color={colors.primary} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile')}</Text>
@@ -149,7 +150,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Goals Section */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <Target size={20} color={colors.secondary} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('dailyGoals')}</Text>
@@ -231,7 +232,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Preferences Section */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <Bell size={20} color={colors.warning} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('preferences')}</Text>
@@ -327,7 +328,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* About Section */}
-      <View style={[styles.section, { backgroundColor: colors.surface }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface }, Shadows.md]}>
         <View style={styles.sectionHeader}>
           <Info size={20} color={colors.accent} strokeWidth={2} />
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('about')}</Text>
@@ -340,7 +341,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Danger Zone */}
-      <View style={[styles.section, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.danger }]}>
+      <View style={[styles.section, { backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.danger }, Shadows.sm]}>
         <TouchableOpacity style={styles.dangerButton} onPress={handleClearHistory}>
           <Trash2 size={20} color={colors.danger} strokeWidth={2} />
           <Text style={[styles.dangerButtonText, { color: colors.danger }]}>{t('clearHistory')}</Text>
@@ -365,8 +366,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   section: {
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 20,
+    padding: 20,
   },
   sectionHeader: {
     flexDirection: "row",

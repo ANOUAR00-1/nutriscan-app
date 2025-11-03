@@ -1,8 +1,10 @@
 import { Tabs } from "expo-router";
 import { Camera, History, LayoutDashboard, Settings } from "lucide-react-native";
 import React from "react";
+import { Platform } from "react-native";
 
 import Colors from "@/constants/colors";
+import { Shadows } from "@/constants/shadows";
 
 export default function TabLayout() {
   return (
@@ -11,16 +13,25 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors.primary,
         headerShown: false,
         tabBarStyle: {
+          position: 'absolute',
           backgroundColor: Colors.surface,
-          borderTopColor: Colors.borderLight,
-          borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
+          borderTopWidth: 0,
+          height: Platform.OS === 'ios' ? 85 : 65,
+          paddingBottom: Platform.OS === 'ios' ? 25 : 8,
           paddingTop: 8,
+          paddingHorizontal: 16,
+          marginHorizontal: 16,
+          marginBottom: Platform.OS === 'ios' ? 20 : 16,
+          borderRadius: 24,
+          ...Shadows.xl,
         },
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: "600",
+          marginTop: 4,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
         },
       }}
     >

@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMeals } from "@/contexts/MealsContext";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
+import { Shadows } from "@/constants/shadows";
 import type { MealScan } from "@/types/nutrition";
 import { useState, useMemo } from "react";
 
@@ -108,9 +109,9 @@ export default function HistoryScreen() {
 
     return (
       <TouchableOpacity
-        style={[styles.mealCard, { backgroundColor: colors.surface, borderColor: colors.borderLight }]}
+        style={[styles.mealCard, { backgroundColor: colors.surface }, Shadows.md]}
         onPress={() => handleMealPress(item)}
-        activeOpacity={0.7}
+        activeOpacity={0.8}
       >
         <Image source={{ uri: item.imageUri }} style={[styles.mealImage, { backgroundColor: colors.backgroundGray }]} contentFit="cover" />
         <View style={styles.mealInfo}>
@@ -295,10 +296,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   mealCard: {
-    borderRadius: 16,
+    borderRadius: 20,
     overflow: "hidden",
     flexDirection: "row",
-    borderWidth: 1,
   },
   mealImage: {
     width: 120,
