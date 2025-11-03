@@ -20,7 +20,7 @@ import { analyzeFoodImage } from "@/utils/foodAnalyzer";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Shadows } from "@/constants/shadows";
-import LoadingScreen from "@/components/LoadingScreen";
+import { LoaderFive } from "@/components/ui/loader";
 
 export default function ScanScreen() {
   const router = useRouter();
@@ -111,7 +111,7 @@ export default function ScanScreen() {
         transparent={false}
         animationType="fade"
       >
-        <LoadingScreen text="Analyzing your food..." />
+        <LoaderFive text="Generating food analysis..." />
       </Modal>
 
       {!selectedImage ? (
