@@ -66,15 +66,15 @@ export default function ResultScreen() {
   const getStatusLabel = () => {
     switch (healthAnalysis.status) {
       case "excellent":
-        return "Excellent Choice!";
+        return t('excellent');
       case "good":
-        return "Good Choice";
+        return t('good');
       case "moderate":
-        return "Moderate";
+        return t('moderate');
       case "poor":
-        return "Not Ideal";
+        return t('poor');
       default:
-        return "Analyzed";
+        return t('nutritionAnalysis');
     }
   };
 
