@@ -5,6 +5,7 @@ import type { UserProfile, UserSettings } from "@/types/user";
 
 const USER_PROFILE_KEY = "nutriscan_user_profile";
 const USER_SETTINGS_KEY = "nutriscan_user_settings";
+const ONBOARDING_KEY = "nutriscan_onboarding_completed";
 
 const DEFAULT_PROFILE: UserProfile = {
   name: "User",
@@ -29,12 +30,14 @@ export const [UserProvider, useUser] = createContextHook(() => {
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(false);
 
   const loadUserData = useCallback(async () => {
     try {
-      const [storedProfile, storedSettings] = await Promise.all([
+      const [storedProfile, storedSettings, onboardingStatus] = await Promise.all([
         AsyncStorage.getItem(USER_PROFILE_KEY),
         AsyncStorage.getItem(USER_SETTINGS_KEY),
+        AsyncStorage.getItem(ONBOARDING_KEY),
       ]);
 
       if (storedProfile) {
@@ -42,6 +45,9 @@ export const [UserProvider, useUser] = createContextHook(() => {
       }
       if (storedSettings) {
         setSettings(JSON.parse(storedSettings));
+      }
+      if (onboardingStatus) {
+        setHasCompletedOnboarding(JSON.parse(onboardingStatus));
       }
     } catch (error) {
       console.error("Failed to load user data:", error);
@@ -79,6 +85,15 @@ export const [UserProvider, useUser] = createContextHook(() => {
     }
   }, []);
 
+  const completeOnboarding = useCallback(async () => {
+    try {
+      await AsyncStorage.setItem(ONBOARDING_KEY, JSON.stringify(true));
+      setHasCompletedOnboarding(true);
+    } catch (error) {
+      console.error("Failed to save onboarding status:", error);
+    }
+  }, []);
+
   useEffect(() => {
     loadUserData();
   }, [loadUserData]);
@@ -88,10 +103,12 @@ export const [UserProvider, useUser] = createContextHook(() => {
       profile,
       settings,
       isLoading,
+      hasCompletedOnboarding,
       updateProfile,
       updateSettings,
       resetProfile,
+      completeOnboarding,
     }),
-    [profile, settings, isLoading, updateProfile, updateSettings, resetProfile]
+    [profile, settings, isLoading, hasCompletedOnboarding, updateProfile, updateSettings, resetProfile, completeOnboarding]
   );
 });

@@ -78,7 +78,7 @@ export default function DashboardScreen() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.backgroundGray }]}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 100 }]}
       showsVerticalScrollIndicator={false}
     >
       {/* Hero Header with Gradient */}
