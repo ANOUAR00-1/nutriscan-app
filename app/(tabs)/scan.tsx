@@ -4,9 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
   Platform,
+  Modal,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
@@ -20,6 +20,7 @@ import { analyzeFoodImage } from "@/utils/foodAnalyzer";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Shadows } from "@/constants/shadows";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export default function ScanScreen() {
   const router = useRouter();
@@ -104,6 +105,15 @@ export default function ScanScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
+      {/* Loading Modal */}
+      <Modal
+        visible={isAnalyzing}
+        transparent={false}
+        animationType="fade"
+      >
+        <LoadingScreen text="Analyzing your food..." />
+      </Modal>
+
       {!selectedImage ? (
         <View style={styles.emptyState}>
           <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
@@ -167,19 +177,13 @@ export default function ScanScreen() {
               style={[styles.analyzeButton, Shadows.primary]}
             >
               <LinearGradient
-                colors={isAnalyzing ? [colors.textLight, colors.textSecondary] : [colors.primary, colors.secondary]}
+                colors={[colors.primary, colors.secondary]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.gradientButton}
               >
-                {isAnalyzing ? (
-                  <ActivityIndicator color="#FFF" size="small" />
-                ) : (
-                  <>
-                    <Sparkles size={24} color="#FFF" strokeWidth={2} />
-                    <Text style={styles.primaryButtonText}>{t('analyzeFood')}</Text>
-                  </>
-                )}
+                <Sparkles size={24} color="#FFF" strokeWidth={2} />
+                <Text style={styles.primaryButtonText}>{t('analyzeFood')}</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
