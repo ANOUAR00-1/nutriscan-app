@@ -89,23 +89,23 @@ export default function DashboardScreen() {
         style={[styles.heroCard, Shadows.lg]}
       >
         <View style={styles.heroContent}>
-          <Text style={styles.greeting}>Hello, {profile.name}! 👋</Text>
-          <Text style={styles.heroSubtitle}>Here's your nutrition overview</Text>
+          <Text style={styles.greeting}>{t('hello')}, {profile.name}! 👋</Text>
+          <Text style={styles.heroSubtitle}>{t('nutritionOverview')}</Text>
         </View>
         <View style={styles.heroStats}>
           <View style={styles.heroStatItem}>
             <Text style={styles.heroStatValue}>{todayStats.mealsCount}</Text>
-            <Text style={styles.heroStatLabel}>Meals Today</Text>
+            <Text style={styles.heroStatLabel}>{t('mealsToday')}</Text>
           </View>
           <View style={[styles.heroDivider, { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
           <View style={styles.heroStatItem}>
             <Text style={styles.heroStatValue}>{todayStats.calories}</Text>
-            <Text style={styles.heroStatLabel}>Calories</Text>
+            <Text style={styles.heroStatLabel}>{t('calories')}</Text>
           </View>
           <View style={[styles.heroDivider, { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
           <View style={styles.heroStatItem}>
             <Text style={styles.heroStatValue}>{Math.round(calorieProgress)}%</Text>
-            <Text style={styles.heroStatLabel}>Progress</Text>
+            <Text style={styles.heroStatLabel}>{t('progress')}</Text>
           </View>
         </View>
       </LinearGradient>
@@ -224,7 +224,7 @@ export default function DashboardScreen() {
             <Text style={[styles.statValue, { color: colors.primary }]}>
               {weeklyStats.avgScore}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Avg. Score</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('avgScore')}</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.backgroundGray }]}>
             <Text style={[styles.statValue, { color: colors.warning }]}>
@@ -245,20 +245,19 @@ export default function DashboardScreen() {
         <View style={[styles.insightCard, { backgroundColor: colors.secondaryLight }]}>
           <Text style={[styles.insightText, { color: colors.text }]}>
             {todayStats.mealsCount === 0
-              ? "🍽️ Start your day by scanning your first meal!"
+              ? t('startFirstMeal')
               : todayStats.mealsCount === 1
-              ? "💪 Great start! Keep tracking your meals."
+              ? t('greatStart')
               : todayStats.mealsCount === 2
-              ? "🔥 You're on a roll! Keep it up."
-              : "⭐ Excellent tracking today!"}
+              ? t('onARoll')
+              : t('excellentTracking')}
           </Text>
         </View>
 
         {calorieProgress < 50 && todayStats.mealsCount > 0 && (
           <View style={[styles.insightCard, { backgroundColor: colors.primaryLight }]}>
             <Text style={[styles.insightText, { color: colors.text }]}>
-              💡 You're at {Math.round(calorieProgress)}% of your calorie goal. Consider adding
-              another meal or snack.
+              {t('calorieGoalLow').replace('{progress}', Math.round(calorieProgress).toString())}
             </Text>
           </View>
         )}
@@ -266,7 +265,7 @@ export default function DashboardScreen() {
         {proteinProgress < 60 && todayStats.mealsCount > 1 && (
           <View style={[styles.insightCard, { backgroundColor: colors.accentLight }]}>
             <Text style={[styles.insightText, { color: colors.text }]}>
-              🥩 Your protein intake is low. Add some lean protein to your next meal.
+              {t('proteinIntakeLow')}
             </Text>
           </View>
         )}

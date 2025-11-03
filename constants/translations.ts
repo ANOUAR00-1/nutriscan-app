@@ -23,6 +23,11 @@ export const translations = {
     
     // Dashboard
     todayNutrition: "Today's Nutrition",
+    hello: 'Hello',
+    nutritionOverview: "Here's your nutrition overview",
+    mealsToday: 'Meals Today',
+    progress: 'Progress',
+    avgScore: 'Avg. Score',
     calories: 'Calories',
     protein: 'Protein',
     carbs: 'Carbs',
@@ -36,12 +41,35 @@ export const translations = {
     noMealsYet: 'No meals tracked yet',
     startScanning: 'Start scanning your meals to see your nutrition data!',
     
+    // Insight Messages
+    startFirstMeal: "🍽️ Start your day by scanning your first meal!",
+    greatStart: "💪 Great start! Keep tracking your meals.",
+    onARoll: "🔥 You're on a roll! Keep it up.",
+    excellentTracking: "⭐ Excellent tracking today!",
+    calorieGoalLow: "💡 You're at {progress}% of your calorie goal. Consider adding another meal or snack.",
+    proteinIntakeLow: "🥩 Your protein intake is low. Add some lean protein to your next meal.",
+    
+    // Onboarding
+    scanYourFood: 'Scan Your Food',
+    scanYourFoodDesc: 'Take a photo of any meal and get instant nutrition analysis powered by AI',
+    trackYourProgress: 'Track Your Progress',
+    trackYourProgressDesc: 'Monitor your daily calories, macros, and achieve your health goals effortlessly',
+    getSmartInsights: 'Get Smart Insights',
+    getSmartInsightsDesc: 'Receive personalized health scores and recommendations for every meal',
+    reachYourGoals: 'Reach Your Goals',
+    reachYourGoalsDesc: 'Set custom nutrition targets and watch yourself achieve them day by day',
+    getStarted: 'Get Started',
+    next: 'Next',
+    skip: 'Skip',
+    
     // Scan
     scanFood: 'Scan Your Food',
+    scanInstruction: 'Take a photo or upload an image to get instant nutrition analysis',
     takePhoto: 'Take Photo',
     chooseGallery: 'Choose from Gallery',
     analyzeFood: 'Analyze Food',
     analyzing: 'Analyzing...',
+    noScanData: 'No scan data available',
     
     // History
     mealHistory: 'Meal History',
@@ -148,6 +176,11 @@ export const translations = {
     
     // Dashboard
     todayNutrition: "Nutrition d'aujourd'hui",
+    hello: 'Bonjour',
+    nutritionOverview: 'Voici votre aperçu nutritionnel',
+    mealsToday: "Repas aujourd'hui",
+    progress: 'Progrès',
+    avgScore: 'Score moy.',
     calories: 'Calories',
     protein: 'Protéines',
     carbs: 'Glucides',
@@ -161,12 +194,35 @@ export const translations = {
     noMealsYet: 'Aucun repas suivi',
     startScanning: 'Commencez à scanner vos repas pour voir vos données nutritionnelles!',
     
+    // Insight Messages
+    startFirstMeal: "🍽️ Commencez votre journée en scannant votre premier repas!",
+    greatStart: "💪 Excellent début! Continuez à suivre vos repas.",
+    onARoll: "🔥 Vous êtes sur une lancée! Continuez comme ça.",
+    excellentTracking: "⭐ Excellent suivi aujourd'hui!",
+    calorieGoalLow: "💡 Vous êtes à {progress}% de votre objectif calorique. Envisagez d'ajouter un autre repas ou collation.",
+    proteinIntakeLow: "🥩 Votre apport en protéines est faible. Ajoutez des protéines maigres à votre prochain repas.",
+    
+    // Onboarding
+    scanYourFood: 'Scannez votre nourriture',
+    scanYourFoodDesc: 'Prenez une photo de n\'importe quel repas et obtenez une analyse nutritionnelle instantanée alimentée par l\'IA',
+    trackYourProgress: 'Suivez votre progression',
+    trackYourProgressDesc: 'Surveillez vos calories quotidiennes, macros, et atteignez vos objectifs de santé sans effort',
+    getSmartInsights: 'Obtenez des informations intelligentes',
+    getSmartInsightsDesc: 'Recevez des scores de santé personnalisés et des recommandations pour chaque repas',
+    reachYourGoals: 'Atteignez vos objectifs',
+    reachYourGoalsDesc: 'Fixez des objectifs nutritionnels personnalisés et regardez-vous les atteindre jour après jour',
+    getStarted: 'Commencer',
+    next: 'Suivant',
+    skip: 'Passer',
+    
     // Scan
     scanFood: 'Scanner votre nourriture',
+    scanInstruction: 'Prenez une photo ou téléchargez une image pour obtenir une analyse nutritionnelle instantanée',
     takePhoto: 'Prendre une photo',
     chooseGallery: 'Choisir dans la galerie',
     analyzeFood: 'Analyser la nourriture',
     analyzing: 'Analyse en cours...',
+    noScanData: 'Aucune donnée de scan disponible',
     
     // History
     mealHistory: 'Historique des repas',
@@ -273,6 +329,11 @@ export const translations = {
     
     // Dashboard
     todayNutrition: 'التغذية اليوم',
+    hello: 'مرحباً',
+    nutritionOverview: 'إليك نظرة عامة على التغذية',
+    mealsToday: 'وجبات اليوم',
+    progress: 'التقدم',
+    avgScore: 'متوسط النقاط',
     calories: 'سعرات حرارية',
     protein: 'بروتين',
     carbs: 'كربوهيدرات',
@@ -286,12 +347,35 @@ export const translations = {
     noMealsYet: 'لا توجد وجبات مسجلة بعد',
     startScanning: 'ابدأ بمسح وجباتك لرؤية بيانات التغذية!',
     
+    // Insight Messages
+    startFirstMeal: "🍽️ ابدأ يومك بمسح وجبتك الأولى!",
+    greatStart: "💪 بداية رائعة! استمر في تتبع وجباتك.",
+    onARoll: "🔥 أنت في حالة جيدة! استمر على هذا النحو.",
+    excellentTracking: "⭐ تتبع ممتاز اليوم!",
+    calorieGoalLow: "💡 أنت عند {progress}% من هدف السعرات الحرارية. فكر في إضافة وجبة أخرى أو وجبة خفيفة.",
+    proteinIntakeLow: "🥩 تناول البروتين منخفض. أضف بعض البروتين الخالي من الدهون إلى وجبتك القادمة.",
+    
+    // Onboarding
+    scanYourFood: 'امسح طعامك',
+    scanYourFoodDesc: 'التقط صورة لأي وجبة واحصل على تحليل غذائي فوري بواسطة الذكاء الاصطناعي',
+    trackYourProgress: 'تتبع تقدمك',
+    trackYourProgressDesc: 'راقب السعرات الحرارية اليومية والماكروز وحقق أهدافك الصحية بسهولة',
+    getSmartInsights: 'احصل على رؤى ذكية',
+    getSmartInsightsDesc: 'احصل على درجات صحية مخصصة وتوصيات لكل وجبة',
+    reachYourGoals: 'حقق أهدافك',
+    reachYourGoalsDesc: 'حدد أهداف غذائية مخصصة وشاهد نفسك تحققها يوماً بعد يوم',
+    getStarted: 'ابدأ الآن',
+    next: 'التالي',
+    skip: 'تخطي',
+    
     // Scan
     scanFood: 'امسح طعامك',
+    scanInstruction: 'التقط صورة أو قم بتحميل صورة للحصول على تحليل غذائي فوري',
     takePhoto: 'التقط صورة',
     chooseGallery: 'اختر من المعرض',
     analyzeFood: 'تحليل الطعام',
     analyzing: 'جاري التحليل...',
+    noScanData: 'لا توجد بيانات مسح متاحة',
     
     // History
     mealHistory: 'سجل الوجبات',

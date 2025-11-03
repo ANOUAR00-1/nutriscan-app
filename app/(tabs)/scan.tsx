@@ -121,7 +121,7 @@ export default function ScanScreen() {
           </View>
           <Text style={[styles.title, { color: colors.text }]}>{t('scanFood')}</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Take a photo or upload an image to get instant nutrition analysis
+            {t('scanInstruction')}
           </Text>
 
           <View style={styles.buttonContainer}>

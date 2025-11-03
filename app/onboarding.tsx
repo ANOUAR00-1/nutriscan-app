@@ -4,50 +4,52 @@ import { Camera, TrendingUp, Target, Sparkles } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useState, useRef } from "react";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Shadows } from "@/constants/shadows";
 
 const { width } = Dimensions.get("window");
 
 interface OnboardingSlide {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   icon: any;
   gradient: [string, string];
 }
 
-const slides: OnboardingSlide[] = [
-  {
-    id: "1",
-    title: "Scan Your Food",
-    description: "Take a photo of any meal and get instant nutrition analysis powered by AI",
-    icon: Camera,
-    gradient: ["#3B82F6", "#2563EB"],
-  },
-  {
-    id: "2",
-    title: "Track Your Progress",
-    description: "Monitor your daily calories, macros, and achieve your health goals effortlessly",
-    icon: TrendingUp,
-    gradient: ["#8B5CF6", "#7C3AED"],
-  },
-  {
-    id: "3",
-    title: "Get Smart Insights",
-    description: "Receive personalized health scores and recommendations for every meal",
-    icon: Sparkles,
-    gradient: ["#06B6D4", "#0891B2"],
-  },
-  {
-    id: "4",
-    title: "Reach Your Goals",
-    description: "Set custom nutrition targets and watch yourself achieve them day by day",
-    icon: Target,
-    gradient: ["#10B981", "#059669"],
-  },
-];
-
 export default function OnboardingScreen() {
+  const { t } = useTranslation();
+  
+  const slides: OnboardingSlide[] = [
+    {
+      id: "1",
+      titleKey: "scanYourFood",
+      descriptionKey: "scanYourFoodDesc",
+      icon: Camera,
+      gradient: ["#3B82F6", "#2563EB"],
+    },
+    {
+      id: "2",
+      titleKey: "trackYourProgress",
+      descriptionKey: "trackYourProgressDesc",
+      icon: TrendingUp,
+      gradient: ["#8B5CF6", "#7C3AED"],
+    },
+    {
+      id: "3",
+      titleKey: "getSmartInsights",
+      descriptionKey: "getSmartInsightsDesc",
+      icon: Sparkles,
+      gradient: ["#06B6D4", "#0891B2"],
+    },
+    {
+      id: "4",
+      titleKey: "reachYourGoals",
+      descriptionKey: "reachYourGoalsDesc",
+      icon: Target,
+      gradient: ["#10B981", "#059669"],
+    },
+  ];
   const router = useRouter();
   const { colors } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -82,9 +84,9 @@ export default function OnboardingScreen() {
         </LinearGradient>
 
         <View style={styles.textContainer}>
-          <Text style={[styles.title, { color: colors.text }]}>{item.title}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t(item.titleKey)}</Text>
           <Text style={[styles.description, { color: colors.textSecondary }]}>
-            {item.description}
+            {t(item.descriptionKey)}
           </Text>
         </View>
       </View>
@@ -94,7 +96,7 @@ export default function OnboardingScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-        <Text style={[styles.skipText, { color: colors.primary }]}>Skip</Text>
+        <Text style={[styles.skipText, { color: colors.primary }]}>{t('skip')}</Text>
       </TouchableOpacity>
 
       <FlatList
@@ -140,7 +142,7 @@ export default function OnboardingScreen() {
             style={styles.nextButtonGradient}
           >
             <Text style={styles.nextButtonText}>
-              {currentIndex === slides.length - 1 ? "Get Started" : "Next"}
+              {currentIndex === slides.length - 1 ? t('getStarted') : t('next')}
             </Text>
           </LinearGradient>
         </TouchableOpacity>

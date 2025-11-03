@@ -38,7 +38,7 @@ export default function ResultScreen() {
     return (
       <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
         <AlertCircle size={64} color={colors.danger} strokeWidth={1.5} />
-        <Text style={[styles.errorText, { color: colors.textSecondary }]}>No scan data available</Text>
+        <Text style={[styles.errorText, { color: colors.textSecondary }]}>{t('noScanData')}</Text>
         <TouchableOpacity style={[styles.backButton, { backgroundColor: colors.primary }]} onPress={() => router.back()}>
           <Text style={styles.backButtonText}>{t('goBack')}</Text>
         </TouchableOpacity>
