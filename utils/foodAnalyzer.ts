@@ -1,63 +1,78 @@
 /**
- * Food Analysis using OpenRouter (Multiple FREE Models!)
+ * Food Analysis with Multiple AI Providers
  * 
- * Provider: OpenRouter (https://openrouter.ai)
- * Models: Google Gemini Flash, LLaVA, Phi-3 Vision, Qwen VL (all FREE)
- * Cost: FREE models available + paid models optional
- * Speed: 1-3 seconds per analysis
+ * Providers:
+ * - Z.AI (PRIMARY) - Fast & accurate vision model
+ * - OpenRouter (BACKUP) - Multiple free models
  * 
- * Why OpenRouter is BEST:
- * - Multiple free models to choose from
- * - Automatic fallback if one fails
- * - One API key for all models
- * - Easy signup (Google/GitHub)
+ * The app automatically tries Z.AI first, falls back to OpenRouter if needed!
  */
 
 import type { FoodItem, NutritionData, HealthAnalysis, MealScan } from "@/types/nutrition";
 
-// ⚠️ IMPORTANT: YOUR API KEYS HAVE EXPIRED! ⚠️
-// 
-// GET NEW FREE KEYS HERE: https://openrouter.ai/keys
-// 
-// 1. Sign in with Google/GitHub
-// 2. Click "Create Key"
-// 3. Copy your new key (starts with sk-or-v1-...)
-// 4. Paste it below (replace the old keys)
-// 5. Save this file and refresh your app
-// 
-// Read API_KEYS_SETUP.md for detailed instructions!
-//
-const OPENROUTER_API_KEYS = [
-  'YOUR_NEW_OPENROUTER_KEY_HERE',  // ← PASTE YOUR NEW KEY HERE!
-  '',  // Optional backup key
-  '',  // Optional backup key
-];
+// ===========================================
+// 🎯 PRIMARY PROVIDER: Z.AI (ACTIVE!)
+// ===========================================
+const ZAI_API_KEY = 'f4f86e69868943019d157c4198f5bd6a.6AWer6XEgWpmjPCW';
+const ZAI_API_URL = 'https://api.z.ai/v1/chat/completions';
 
+// ===========================================
+// 🔄 BACKUP PROVIDER: OPENROUTER (Fallback)
+// ===========================================
+// Get free keys: https://openrouter.ai/keys
+const OPENROUTER_API_KEYS = [
+  'YOUR_OPENROUTER_KEY_HERE',  // ← Optional backup key
+  '',
+  '',
+];
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-// Get current API key (rotates through backups if primary fails)
+// Provider priority (tries in order)
+type Provider = 'zai' | 'openrouter';
+let currentProvider: Provider = 'zai';  // Start with Z.AI!
+
+// Get current API configuration
 let currentKeyIndex = 0;
-function getApiKey(): string {
-  const validKeys = OPENROUTER_API_KEYS.filter(k => k && k.startsWith('sk-or-v1-'));
-  
-  console.log('🔑 Available API keys:', validKeys.length);
-  console.log('🔑 Keys loaded:', validKeys.map(k => `${k.substring(0, 15)}...`));
-  
-  if (validKeys.length === 0) {
-    console.error('❌ ❌ ❌ NO VALID API KEYS! ❌ ❌ ❌');
-    console.error('📖 Read API_KEYS_SETUP.md for instructions!');
-    console.error('🔗 Get free keys: https://openrouter.ai/keys');
-    throw new Error('API keys not configured! Get free keys at https://openrouter.ai/keys');
+
+function getApiConfig(): { apiKey: string; apiUrl: string; provider: Provider } {
+  if (currentProvider === 'zai') {
+    console.log('🎯 Using Z.AI provider');
+    return {
+      apiKey: ZAI_API_KEY,
+      apiUrl: ZAI_API_URL,
+      provider: 'zai',
+    };
+  } else {
+    // OpenRouter fallback
+    const validKeys = OPENROUTER_API_KEYS.filter(k => k && k.startsWith('sk-or-v1-'));
+    
+    if (validKeys.length === 0) {
+      console.warn('⚠️ No OpenRouter keys configured, staying with Z.AI');
+      return {
+        apiKey: ZAI_API_KEY,
+        apiUrl: ZAI_API_URL,
+        provider: 'zai',
+      };
+    }
+    
+    const key = validKeys[currentKeyIndex % validKeys.length];
+    console.log('🔄 Using OpenRouter backup provider');
+    return {
+      apiKey: key,
+      apiUrl: OPENROUTER_API_URL,
+      provider: 'openrouter',
+    };
   }
-  
-  const key = validKeys[currentKeyIndex % validKeys.length];
-  console.log('🔑 Using key:', `${key.substring(0, 15)}...`);
-  return key;
 }
 
-function rotateToNextKey(): void {
-  currentKeyIndex = (currentKeyIndex + 1) % OPENROUTER_API_KEYS.length;
-  console.log(`🔄 Rotating to backup API key ${currentKeyIndex + 1}/${OPENROUTER_API_KEYS.length}`);
+function switchToBackupProvider(): void {
+  if (currentProvider === 'zai') {
+    currentProvider = 'openrouter';
+    console.log('🔄 Switching to OpenRouter backup provider');
+  } else {
+    currentKeyIndex = (currentKeyIndex + 1) % OPENROUTER_API_KEYS.length;
+    console.log(`🔄 Rotating to next OpenRouter key ${currentKeyIndex + 1}/${OPENROUTER_API_KEYS.length}`);
+  }
 }
 
 // FREE Vision Models on OpenRouter (Only the model you have access to)
@@ -248,57 +263,53 @@ Begin analysis now:`;
       },
     ];
 
-    console.log("🚀 Sending request to OpenRouter...");
+    // Get current provider configuration
+    const config = getApiConfig();
+    console.log(`🚀 Sending request to ${config.provider === 'zai' ? 'Z.AI' : 'OpenRouter'}...`);
 
-    // Call OpenRouter API
-    const response = await fetch(OPENROUTER_API_URL, {
+    // Call AI API with current provider
+    const response = await fetch(config.apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${getApiKey()}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://nutriscan.app', // Optional: for rankings
-        'X-Title': 'NutriScan', // Optional: show in rankings
+        'HTTP-Referer': 'https://nutriscan.app',
+        'X-Title': 'NutriScan',
       },
       body: JSON.stringify({
-        model: PRIMARY_MODEL,
+        model: config.provider === 'zai' ? 'gpt-4o-mini' : PRIMARY_MODEL,  // Z.AI uses gpt-4o-mini
         messages: messages,
         temperature: 0.3,
         max_tokens: 2000,
-        response_format: { type: "json_object" }, // Force JSON output
+        response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error("❌ OpenRouter API Error:", errorData);
+      console.error(`❌ ${config.provider.toUpperCase()} API Error:`, errorData);
       
-      if (response.status === 401) {
-        // Invalid key - try rotating to backup key
-        if (OPENROUTER_API_KEYS.length > 1) {
-          console.warn("⚠️ Current API key invalid, rotating to backup...");
-          rotateToNextKey();
-          // Retry with backup key
-          return await analyzeFoodImage(imageUri, model);
-        }
-        throw new Error("Invalid OpenRouter API key. Get one at: https://openrouter.ai/keys");
+      if (response.status === 401 || response.status === 403) {
+        // Invalid key - switch to backup provider
+        console.warn("⚠️ Current provider failed, switching to backup...");
+        switchToBackupProvider();
+        // Retry with backup provider
+        return await analyzeFoodImage(imageUri, model);
       } else if (response.status === 429) {
-        // Rate limit - try rotating to backup key
-        if (OPENROUTER_API_KEYS.length > 1) {
-          console.warn("⚠️ Rate limit hit, rotating to backup key...");
-          rotateToNextKey();
-          // Retry with backup key
-          return await analyzeFoodImage(imageUri, model);
-        }
-        throw new Error("Rate limit exceeded. Try a different free model or wait a moment.");
+        // Rate limit - switch to backup provider
+        console.warn("⚠️ Rate limit hit, switching to backup provider...");
+        switchToBackupProvider();
+        // Retry with backup provider
+        return await analyzeFoodImage(imageUri, model);
       } else if (response.status === 402) {
-        throw new Error("Insufficient credits. This model requires payment or use a free model.");
+        throw new Error("Insufficient credits. Switching providers...");
       } else {
-        throw new Error(`OpenRouter API error: ${response.statusText}`);
+        throw new Error(`${config.provider} API error: ${response.statusText}`);
       }
     }
 
     const data = await response.json();
-    console.log("✅ Received response from OpenRouter");
+    console.log(`✅ Received response from ${config.provider === 'zai' ? 'Z.AI' : 'OpenRouter'}`);
     console.log("💰 Cost:", data.usage?.total_cost || "FREE");
 
     // Extract the AI's response
