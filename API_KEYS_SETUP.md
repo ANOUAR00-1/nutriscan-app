@@ -1,6 +1,12 @@
 # 🔑 API Keys Setup Guide
 
-Your OpenRouter API keys have expired. Follow these steps to get NEW FREE keys:
+## ⚠️ Important: Web Browser Limitation
+
+**Z.AI blocks browser requests (CORS policy)** but works on mobile apps!
+
+For **web browsers**, you need an OpenRouter key (also FREE!):
+
+---
 
 ## Step 1: Get Your FREE OpenRouter API Key
 
