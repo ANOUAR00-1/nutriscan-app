@@ -15,12 +15,22 @@
 
 import type { FoodItem, NutritionData, HealthAnalysis, MealScan } from "@/types/nutrition";
 
-// OpenRouter API configuration with backup keys
-// TODO: Replace these with your actual API keys from https://openrouter.ai/keys
+// ⚠️ IMPORTANT: YOUR API KEYS HAVE EXPIRED! ⚠️
+// 
+// GET NEW FREE KEYS HERE: https://openrouter.ai/keys
+// 
+// 1. Sign in with Google/GitHub
+// 2. Click "Create Key"
+// 3. Copy your new key (starts with sk-or-v1-...)
+// 4. Paste it below (replace the old keys)
+// 5. Save this file and refresh your app
+// 
+// Read API_KEYS_SETUP.md for detailed instructions!
+//
 const OPENROUTER_API_KEYS = [
-  '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',      // Primary key
-  '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',     // Backup 1
-  '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',     // Backup 2
+  'YOUR_NEW_OPENROUTER_KEY_HERE',  // ← PASTE YOUR NEW KEY HERE!
+  '',  // Optional backup key
+  '',  // Optional backup key
 ];
 
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
@@ -28,16 +38,20 @@ const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 // Get current API key (rotates through backups if primary fails)
 let currentKeyIndex = 0;
 function getApiKey(): string {
-  console.log('🔑 Available API keys:', OPENROUTER_API_KEYS.length);
-  console.log('🔑 Keys loaded:', OPENROUTER_API_KEYS.map(k => k ? `${k.substring(0, 15)}...` : 'undefined'));
+  const validKeys = OPENROUTER_API_KEYS.filter(k => k && k.startsWith('sk-or-v1-'));
   
-  if (OPENROUTER_API_KEYS.length === 0) {
-    console.error('❌ No API keys found! Check your .env file');
-    return 'YOUR_OPENROUTER_API_KEY_HERE';
+  console.log('🔑 Available API keys:', validKeys.length);
+  console.log('🔑 Keys loaded:', validKeys.map(k => `${k.substring(0, 15)}...`));
+  
+  if (validKeys.length === 0) {
+    console.error('❌ ❌ ❌ NO VALID API KEYS! ❌ ❌ ❌');
+    console.error('📖 Read API_KEYS_SETUP.md for instructions!');
+    console.error('🔗 Get free keys: https://openrouter.ai/keys');
+    throw new Error('API keys not configured! Get free keys at https://openrouter.ai/keys');
   }
   
-  const key = OPENROUTER_API_KEYS[currentKeyIndex % OPENROUTER_API_KEYS.length];
-  console.log('🔑 Using key:', key ? `${key.substring(0, 15)}...` : 'undefined');
+  const key = validKeys[currentKeyIndex % validKeys.length];
+  console.log('🔑 Using key:', `${key.substring(0, 15)}...`);
   return key;
 }
 
