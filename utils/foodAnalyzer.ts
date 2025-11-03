@@ -22,8 +22,9 @@ const ZAI_API_URL = 'https://api.z.ai/v1/chat/completions';
 // 🔄 BACKUP PROVIDER: OPENROUTER (Fallback)
 // ===========================================
 // Get free keys: https://openrouter.ai/keys
+// DeepSeek R1 is a powerful FREE model with vision support!
 const OPENROUTER_API_KEYS = [
-  'YOUR_OPENROUTER_KEY_HERE',  // ← Optional backup key
+  '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',  // ✅ ACTIVE!
   '',
   '',
 ];
