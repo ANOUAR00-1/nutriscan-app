@@ -107,6 +107,21 @@ export const translations = {
     recommendations: 'Recommendations',
     noAllergens: 'No common allergens detected',
     goBack: 'Go Back',
+    addToJournal: 'Add to Journal',
+    saveMeal: 'Save Meal',
+    
+    // Food Details
+    mixedFoodItem: 'Mixed Food Item',
+    serving: 'serving',
+    servings: 'servings',
+    grams: 'g',
+    kcal: 'kcal',
+    nutritionInfo: 'Nutrition Information',
+    
+    // Health Status
+    nutritionAnalysis: 'Nutrition Analysis',
+    balancedMeal: 'Balanced Meal',
+    healthyChoice: 'Healthy Choice',
     
     // Languages
     english: 'English',
@@ -217,6 +232,21 @@ export const translations = {
     recommendations: 'Recommandations',
     noAllergens: 'Aucun allergène commun détecté',
     goBack: 'Retour',
+    addToJournal: 'Ajouter au journal',
+    saveMeal: 'Enregistrer le repas',
+    
+    // Food Details
+    mixedFoodItem: 'Aliment mixte',
+    serving: 'portion',
+    servings: 'portions',
+    grams: 'g',
+    kcal: 'kcal',
+    nutritionInfo: 'Informations nutritionnelles',
+    
+    // Health Status
+    nutritionAnalysis: 'Analyse nutritionnelle',
+    balancedMeal: 'Repas équilibré',
+    healthyChoice: 'Choix sain',
     
     // Languages
     english: 'English',
@@ -327,6 +357,21 @@ export const translations = {
     recommendations: 'توصيات',
     noAllergens: 'لم يتم اكتشاف مسببات حساسية شائعة',
     goBack: 'رجوع',
+    addToJournal: 'إضافة إلى اليوميات',
+    saveMeal: 'حفظ الوجبة',
+    
+    // Food Details
+    mixedFoodItem: 'عنصر طعام مختلط',
+    serving: 'حصة',
+    servings: 'حصص',
+    grams: 'جم',
+    kcal: 'سعرة',
+    nutritionInfo: 'معلومات الطعام',
+    
+    // Health Status
+    nutritionAnalysis: 'تحليل التغذية',
+    balancedMeal: 'وجبة متوازنة',
+    healthyChoice: 'اختيار صحي',
     
     // Languages
     english: 'English',
