@@ -44,9 +44,11 @@ export default function HistoryScreen() {
   const handleDelete = (id: string, foodName: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     
+    const confirmMessage = t('deleteMealConfirm').replace('{name}', foodName || t('thisMeal'));
+    
     Alert.alert(
       t('delete'),
-      `Are you sure you want to delete "${foodName}"? This action cannot be undone.`,
+      confirmMessage,
       [
         { 
           text: t('cancel'), 

@@ -110,6 +110,9 @@ export const translations = {
     clearHistoryConfirm: 'Are you sure you want to delete all your meal scans? This action cannot be undone.',
     clearAll: 'Clear All',
     historyCleared: 'All meal history has been cleared.',
+    deleteMealConfirm: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
+    mealDeleted: 'Meal deleted successfully.',
+    thisMeal: 'this meal',
     
     // Activity Levels
     sedentary: 'Sedentary',
@@ -263,6 +266,9 @@ export const translations = {
     clearHistoryConfirm: 'Êtes-vous sûr de vouloir supprimer tous vos scans de repas? Cette action ne peut pas être annulée.',
     clearAll: 'Tout effacer',
     historyCleared: 'Tout l\'historique des repas a été effacé.',
+    deleteMealConfirm: 'Êtes-vous sûr de vouloir supprimer "{name}"? Cette action ne peut pas être annulée.',
+    mealDeleted: 'Repas supprimé avec succès.',
+    thisMeal: 'ce repas',
     
     // Activity Levels
     sedentary: 'Sédentaire',
@@ -416,6 +422,9 @@ export const translations = {
     clearHistoryConfirm: 'هل أنت متأكد من حذف جميع سجلات الوجبات؟ لا يمكن التراجع عن هذا الإجراء.',
     clearAll: 'مسح الكل',
     historyCleared: 'تم مسح جميع سجلات الوجبات.',
+    deleteMealConfirm: 'هل أنت متأكد من حذف "{name}"؟ لا يمكن التراجع عن هذا الإجراء.',
+    mealDeleted: 'تم حذف الوجبة بنجاح.',
+    thisMeal: 'هذه الوجبة',
     
     // Activity Levels
     sedentary: 'خامل',
