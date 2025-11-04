@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { User, Activity, Target, CheckCircle } from "lucide-react-native";
 import { useRouter } from "expo-router";
@@ -24,6 +24,7 @@ export default function ProfileSetupScreen() {
   const [height, setHeight] = useState("");
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>("moderate");
   const [goal, setGoal] = useState<Goal>("maintain");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const activityLevels = [
     { value: "sedentary", label: "Sedentary", desc: "Little to no exercise" },
@@ -38,6 +39,27 @@ export default function ProfileSetupScreen() {
     { value: "maintain", label: "Maintain", icon: "⚖️", color: colors.primary },
     { value: "gain", label: "Gain Muscle", icon: "💪", color: colors.success },
   ];
+
+  const validateStep1 = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    const ageNum = parseInt(age);
+    const weightNum = parseInt(weight);
+    const heightNum = parseInt(height);
+    
+    if (ageNum && (ageNum < 13 || ageNum > 120)) {
+      newErrors.age = "Age must be between 13 and 120";
+    }
+    if (weightNum && (weightNum < 30 || weightNum > 300)) {
+      newErrors.weight = "Weight must be between 30 and 300 kg";
+    }
+    if (heightNum && (heightNum < 100 || heightNum > 250)) {
+      newErrors.height = "Height must be between 100 and 250 cm";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const calculateCalories = (): number => {
     const w = parseInt(weight) || 70;
@@ -66,21 +88,34 @@ export default function ProfileSetupScreen() {
   };
 
   const handleFinish = async () => {
-    const calories = calculateCalories();
-    
-    await updateProfile({
-      name: name.trim() || "User",
-      activityLevel,
-      goals: {
-        dailyCalories: calories,
-        dailyProtein: Math.round(calories * 0.3 / 4), // 30% of calories from protein
-        dailyCarbs: Math.round(calories * 0.4 / 4), // 40% from carbs
-        dailyFat: Math.round(calories * 0.3 / 9), // 30% from fat
-      },
-    });
+    try {
+      const calories = calculateCalories();
+      
+      await updateProfile({
+        name: name.trim() || "User",
+        activityLevel,
+        goals: {
+          dailyCalories: calories,
+          dailyProtein: Math.round(calories * 0.3 / 4), // 30% of calories from protein
+          dailyCarbs: Math.round(calories * 0.4 / 4), // 40% from carbs
+          dailyFat: Math.round(calories * 0.3 / 9), // 30% from fat
+        },
+      });
 
-    await completeOnboarding();
-    router.replace("/(tabs)/dashboard");
+      await completeOnboarding();
+      
+      // Use setTimeout to ensure navigation happens after state updates
+      setTimeout(() => {
+        router.replace("/(tabs)/dashboard");
+      }, 100);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+      Alert.alert(
+        'Error Saving Profile',
+        'There was a problem saving your profile. Please try again.',
+        [{ text: 'OK' }]
+      );
+    }
   };
 
   const renderStep1 = () => (
@@ -111,38 +146,59 @@ export default function ProfileSetupScreen() {
           <View style={[styles.inputGroup, { flex: 1 }]}>
             <Text style={[styles.label, { color: colors.text }]}>Age</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderColor: colors.border }]}
+              style={[
+                styles.input, 
+                { backgroundColor: colors.surface, color: colors.text, borderColor: errors.age ? colors.danger : colors.border }
+              ]}
               placeholder="25"
               placeholderTextColor={colors.textLight}
               value={age}
-              onChangeText={setAge}
+              onChangeText={(text) => {
+                setAge(text);
+                if (errors.age) setErrors({ ...errors, age: '' });
+              }}
               keyboardType="number-pad"
             />
+            {errors.age && <Text style={[styles.errorText, { color: colors.danger }]}>{errors.age}</Text>}
           </View>
 
           <View style={[styles.inputGroup, { flex: 1 }]}>
             <Text style={[styles.label, { color: colors.text }]}>Weight (kg)</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderColor: colors.border }]}
+              style={[
+                styles.input, 
+                { backgroundColor: colors.surface, color: colors.text, borderColor: errors.weight ? colors.danger : colors.border }
+              ]}
               placeholder="70"
               placeholderTextColor={colors.textLight}
               value={weight}
-              onChangeText={setWeight}
+              onChangeText={(text) => {
+                setWeight(text);
+                if (errors.weight) setErrors({ ...errors, weight: '' });
+              }}
               keyboardType="number-pad"
             />
+            {errors.weight && <Text style={[styles.errorText, { color: colors.danger }]}>{errors.weight}</Text>}
           </View>
         </View>
 
         <View style={styles.inputGroup}>
           <Text style={[styles.label, { color: colors.text }]}>Height (cm)</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.surface, color: colors.text, borderColor: colors.border }]}
+            style={[
+              styles.input, 
+              { backgroundColor: colors.surface, color: colors.text, borderColor: errors.height ? colors.danger : colors.border }
+            ]}
             placeholder="170"
             placeholderTextColor={colors.textLight}
             value={height}
-            onChangeText={setHeight}
+            onChangeText={(text) => {
+              setHeight(text);
+              if (errors.height) setErrors({ ...errors, height: '' });
+            }}
             keyboardType="number-pad"
           />
+          {errors.height && <Text style={[styles.errorText, { color: colors.danger }]}>{errors.height}</Text>}
         </View>
       </View>
     </View>
@@ -289,6 +345,9 @@ export default function ProfileSetupScreen() {
         <TouchableOpacity
           style={[styles.nextButton, Shadows.lg, step === 1 && { flex: 1 }]}
           onPress={() => {
+            if (step === 1 && !validateStep1()) {
+              return;
+            }
             if (step < 3) {
               setStep(step + 1);
             } else {
@@ -488,5 +547,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#FFF",
+  },
+  errorText: {
+    fontSize: 12,
+    marginTop: 4,
   },
 });

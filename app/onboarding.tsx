@@ -1,13 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList, ViewToken } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Camera, TrendingUp, Target, Sparkles } from "lucide-react-native";
 import { useRouter } from "expo-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Shadows } from "@/constants/shadows";
-
-const { width } = Dimensions.get("window");
 
 interface OnboardingSlide {
   id: string;
@@ -19,6 +18,16 @@ interface OnboardingSlide {
 
 export default function OnboardingScreen() {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width);
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenWidth(window.width);
+    });
+    
+    return () => subscription?.remove();
+  }, []);
   
   const slides: OnboardingSlide[] = [
     {
@@ -55,11 +64,25 @@ export default function OnboardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
+  const onViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  }, []);
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
+
   const handleNext = () => {
     if (currentIndex < slides.length - 1) {
       const nextIndex = currentIndex + 1;
-      flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-      setCurrentIndex(nextIndex);
+      try {
+        flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+      } catch (error) {
+        console.warn('Scroll to index failed, using fallback:', error);
+        flatListRef.current?.scrollToOffset({ offset: nextIndex * screenWidth, animated: true });
+      }
     } else {
       router.replace("/profile-setup" as any);
     }
@@ -73,7 +96,7 @@ export default function OnboardingScreen() {
     const Icon = item.icon;
     
     return (
-      <View style={[styles.slide, { width }]}>
+      <View style={[styles.slide, { width: screenWidth }]}>
         <LinearGradient
           colors={item.gradient}
           start={{ x: 0, y: 0 }}
@@ -95,7 +118,11 @@ export default function OnboardingScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+      <TouchableOpacity 
+        style={[styles.skipButton, { top: insets.top + 10 }]} 
+        onPress={handleSkip}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      >
         <Text style={[styles.skipText, { color: colors.primary }]}>{t('skip')}</Text>
       </TouchableOpacity>
 
@@ -107,13 +134,29 @@ export default function OnboardingScreen() {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(event) => {
-          const index = Math.round(event.nativeEvent.contentOffset.x / width);
-          setCurrentIndex(index);
+        bounces={false}
+        decelerationRate="fast"
+        snapToInterval={screenWidth}
+        snapToAlignment="center"
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        getItemLayout={(data, index) => ({
+          length: screenWidth,
+          offset: screenWidth * index,
+          index,
+        })}
+        onScrollToIndexFailed={(info) => {
+          const wait = new Promise(resolve => setTimeout(resolve, 500));
+          wait.then(() => {
+            flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+          });
         }}
+        initialNumToRender={1}
+        maxToRenderPerBatch={2}
+        windowSize={3}
       />
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
         <View style={styles.pagination}>
           {slides.map((_, index) => (
             <View
@@ -157,7 +200,6 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     position: "absolute",
-    top: 50,
     right: 20,
     zIndex: 10,
     padding: 12,
@@ -198,7 +240,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 40,
-    paddingBottom: 50,
     gap: 24,
   },
   pagination: {

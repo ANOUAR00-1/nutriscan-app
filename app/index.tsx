@@ -1,17 +1,21 @@
-import { Redirect } from "expo-router";
+import { useEffect } from "react";
+import { useRouter } from "expo-router";
 import { useUser } from "@/contexts/UserContext";
 import LoadingScreen from "@/components/LoadingScreen";
 
 export default function Index() {
   const { hasCompletedOnboarding, isLoading } = useUser();
+  const router = useRouter();
 
-  if (isLoading) {
-    return <LoadingScreen text="NutriScan" />;
-  }
+  useEffect(() => {
+    if (!isLoading) {
+      if (!hasCompletedOnboarding) {
+        router.replace("/onboarding");
+      } else {
+        router.replace("/(tabs)/dashboard");
+      }
+    }
+  }, [isLoading, hasCompletedOnboarding, router]);
 
-  if (!hasCompletedOnboarding) {
-    return <Redirect href={"/onboarding" as any} />;
-  }
-
-  return <Redirect href="/(tabs)/dashboard" />;
+  return <LoadingScreen text="NutriScan" />;
 }

@@ -41,16 +41,35 @@ export const [UserProvider, useUser] = createContextHook(() => {
       ]);
 
       if (storedProfile) {
-        setProfile(JSON.parse(storedProfile));
+        try {
+          setProfile(JSON.parse(storedProfile));
+        } catch (parseError) {
+          console.error("Failed to parse profile:", parseError);
+          setProfile(DEFAULT_PROFILE);
+        }
       }
       if (storedSettings) {
-        setSettings(JSON.parse(storedSettings));
+        try {
+          setSettings(JSON.parse(storedSettings));
+        } catch (parseError) {
+          console.error("Failed to parse settings:", parseError);
+          setSettings(DEFAULT_SETTINGS);
+        }
       }
       if (onboardingStatus) {
-        setHasCompletedOnboarding(JSON.parse(onboardingStatus));
+        try {
+          setHasCompletedOnboarding(JSON.parse(onboardingStatus));
+        } catch (parseError) {
+          console.error("Failed to parse onboarding status:", parseError);
+          setHasCompletedOnboarding(false);
+        }
       }
     } catch (error) {
       console.error("Failed to load user data:", error);
+      // Set defaults on error
+      setProfile(DEFAULT_PROFILE);
+      setSettings(DEFAULT_SETTINGS);
+      setHasCompletedOnboarding(false);
     } finally {
       setIsLoading(false);
     }
