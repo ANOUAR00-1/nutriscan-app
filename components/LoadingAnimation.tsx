@@ -1,391 +1,258 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '@/hooks/useTheme';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function LoadingAnimation() {
   const { colors } = useTheme();
   
-  // Animation values for multiple flames
-  const scaleAnim1 = useRef(new Animated.Value(1)).current;
-  const scaleAnim2 = useRef(new Animated.Value(1)).current;
-  const scaleAnim3 = useRef(new Animated.Value(1)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim1 = useRef(new Animated.Value(0.3)).current;
-  const opacityAnim2 = useRef(new Animated.Value(0.3)).current;
-  const translateY1 = useRef(new Animated.Value(0)).current;
-  const translateY2 = useRef(new Animated.Value(0)).current;
-  const translateY3 = useRef(new Animated.Value(0)).current;
+  // Animation values for WiFi circles
+  const outerAnim = useRef(new Animated.Value(0)).current;
+  const middleAnim = useRef(new Animated.Value(0)).current;
+  const innerAnim = useRef(new Animated.Value(0)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Main flame pulse animation
-    const pulseAnimation = Animated.loop(
+    // Outer circle animation
+    const outerCircle = Animated.loop(
       Animated.sequence([
-        Animated.parallel([
-          Animated.timing(scaleAnim1, {
-            toValue: 1.2,
-            duration: 800,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacityAnim1, {
-            toValue: 1,
-            duration: 800,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.parallel([
-          Animated.timing(scaleAnim1, {
-            toValue: 0.95,
-            duration: 400,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacityAnim1, {
-            toValue: 0.7,
-            duration: 400,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.timing(scaleAnim1, {
-          toValue: 1,
-          duration: 400,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ])
-    );
-
-    // Side flames
-    const sideFlame1 = Animated.loop(
-      Animated.sequence([
-        Animated.timing(scaleAnim2, {
-          toValue: 1.1,
-          duration: 1000,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim2, {
-          toValue: 0.9,
-          duration: 600,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim2, {
+        Animated.timing(outerAnim, {
           toValue: 1,
           duration: 600,
-          useNativeDriver: true,
+          easing: Easing.ease,
+          useNativeDriver: false,
         }),
+        Animated.delay(450),
+        Animated.timing(outerAnim, {
+          toValue: 0,
+          duration: 600,
+          easing: Easing.ease,
+          useNativeDriver: false,
+        }),
+        Animated.delay(150),
       ])
     );
 
-    const sideFlame2 = Animated.loop(
+    // Middle circle animation
+    const middleCircle = Animated.loop(
       Animated.sequence([
-        Animated.timing(scaleAnim3, {
-          toValue: 1.15,
-          duration: 1200,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim3, {
-          toValue: 0.85,
-          duration: 800,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim3, {
+        Animated.delay(150),
+        Animated.timing(middleAnim, {
           toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
+          duration: 600,
+          easing: Easing.ease,
+          useNativeDriver: false,
+        }),
+        Animated.delay(450),
+        Animated.timing(middleAnim, {
+          toValue: 0,
+          duration: 600,
+          easing: Easing.ease,
+          useNativeDriver: false,
         }),
       ])
     );
 
-    // Rotation animation
-    const rotationAnimation = Animated.loop(
-      Animated.timing(rotateAnim, {
-        toValue: 1,
-        duration: 3000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    );
-
-    // Particle animations
-    const particle1 = Animated.loop(
+    // Inner circle animation
+    const innerCircle = Animated.loop(
       Animated.sequence([
-        Animated.parallel([
-          Animated.timing(translateY1, {
-            toValue: -80,
-            duration: 2000,
-            easing: Easing.out(Easing.ease),
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacityAnim2, {
-            toValue: 0,
-            duration: 2000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.parallel([
-          Animated.timing(translateY1, {
-            toValue: 0,
-            duration: 0,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacityAnim2, {
-            toValue: 1,
-            duration: 0,
-            useNativeDriver: true,
-          }),
-        ]),
+        Animated.delay(300),
+        Animated.timing(innerAnim, {
+          toValue: 1,
+          duration: 600,
+          easing: Easing.ease,
+          useNativeDriver: false,
+        }),
+        Animated.delay(450),
+        Animated.timing(innerAnim, {
+          toValue: 0,
+          duration: 600,
+          easing: Easing.ease,
+          useNativeDriver: false,
+        }),
       ])
     );
 
-    const particle2 = Animated.loop(
+    // Text animation
+    const textAnim = Animated.loop(
       Animated.sequence([
-        Animated.timing(translateY2, {
-          toValue: -60,
+        Animated.timing(textOpacity, {
+          toValue: 1,
           duration: 1800,
-          easing: Easing.out(Easing.ease),
+          easing: Easing.ease,
           useNativeDriver: true,
         }),
-        Animated.timing(translateY2, {
+        Animated.timing(textOpacity, {
           toValue: 0,
-          duration: 0,
+          duration: 1800,
+          easing: Easing.ease,
           useNativeDriver: true,
         }),
       ])
     );
 
-    const particle3 = Animated.loop(
-      Animated.sequence([
-        Animated.timing(translateY3, {
-          toValue: -70,
-          duration: 2200,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY3, {
-          toValue: 0,
-          duration: 0,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-
-    pulseAnimation.start();
-    sideFlame1.start();
-    sideFlame2.start();
-    rotationAnimation.start();
-    particle1.start();
-    particle2.start();
-    particle3.start();
+    outerCircle.start();
+    middleCircle.start();
+    innerCircle.start();
+    textAnim.start();
 
     return () => {
-      pulseAnimation.stop();
-      sideFlame1.stop();
-      sideFlame2.stop();
-      rotationAnimation.stop();
-      particle1.stop();
-      particle2.stop();
-      particle3.stop();
+      outerCircle.stop();
+      middleCircle.stop();
+      innerCircle.stop();
+      textAnim.stop();
     };
   }, []);
 
-  const rotation = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+  // Interpolate stroke dash offset for animations
+  const outerStrokeDash = outerAnim.interpolate({
+    inputRange: [0, 0.25, 0.65, 0.8, 1],
+    outputRange: [25, 0, 301, 276, 276],
+  });
+
+  const middleStrokeDash = middleAnim.interpolate({
+    inputRange: [0, 0.25, 0.65, 0.8, 1],
+    outputRange: [17, 0, 204, 187, 187],
+  });
+
+  const innerStrokeDash = innerAnim.interpolate({
+    inputRange: [0, 0.25, 0.65, 0.8, 1],
+    outputRange: [9, 0, 106, 97, 97],
   });
 
   return (
     <View style={styles.container}>
-      {/* Particles */}
-      <Animated.View
-        style={[
-          styles.particle,
-          {
-            opacity: opacityAnim2,
-            transform: [{ translateY: translateY1 }, { translateX: -20 }],
-          },
-        ]}
-      >
-        <View style={[styles.particleDot, { backgroundColor: colors.primary }]} />
-      </Animated.View>
-
-      <Animated.View
-        style={[
-          styles.particle,
-          {
-            opacity: opacityAnim2,
-            transform: [{ translateY: translateY2 }, { translateX: 20 }],
-          },
-        ]}
-      >
-        <View style={[styles.particleDot, { backgroundColor: colors.secondary }]} />
-      </Animated.View>
-
-      <Animated.View
-        style={[
-          styles.particle,
-          {
-            opacity: opacityAnim2,
-            transform: [{ translateY: translateY3 }],
-          },
-        ]}
-      >
-        <View style={[styles.particleDot, { backgroundColor: colors.accent }]} />
-      </Animated.View>
-
-      {/* Outer rotating ring */}
-      <Animated.View
-        style={[
-          styles.outerRing,
-          {
-            transform: [{ rotate: rotation }],
-          },
-        ]}
-      >
-        <LinearGradient
-          colors={[colors.primary + '40', colors.secondary + '40', colors.primary + '40']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.ringGradient}
+      {/* Outer Circle */}
+      <Svg width={86} height={86} viewBox="0 0 86 86" style={styles.circleOuter}>
+        <Circle
+          cx={43}
+          cy={43}
+          r={40}
+          stroke={colors.border}
+          strokeWidth={6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          rotation="-100"
+          origin="43, 43"
         />
-      </Animated.View>
+        <AnimatedCircle
+          cx={43}
+          cy={43}
+          r={40}
+          stroke={colors.primary}
+          strokeWidth={6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          strokeDasharray="62.75 188.25"
+          strokeDashoffset={outerStrokeDash}
+          rotation="-100"
+          origin="43, 43"
+        />
+      </Svg>
 
-      {/* Left flame */}
-      <Animated.View
+      {/* Middle Circle */}
+      <Svg width={60} height={60} viewBox="0 0 60 60" style={styles.circleMiddle}>
+        <Circle
+          cx={30}
+          cy={30}
+          r={27}
+          stroke={colors.border}
+          strokeWidth={6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          rotation="-100"
+          origin="30, 30"
+        />
+        <AnimatedCircle
+          cx={30}
+          cy={30}
+          r={27}
+          stroke={colors.primary}
+          strokeWidth={6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          strokeDasharray="42.5 127.5"
+          strokeDashoffset={middleStrokeDash}
+          rotation="-100"
+          origin="30, 30"
+        />
+      </Svg>
+
+      {/* Inner Circle */}
+      <Svg width={34} height={34} viewBox="0 0 34 34" style={styles.circleInner}>
+        <Circle
+          cx={17}
+          cy={17}
+          r={14}
+          stroke={colors.border}
+          strokeWidth={6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          rotation="-100"
+          origin="17, 17"
+        />
+        <AnimatedCircle
+          cx={17}
+          cy={17}
+          r={14}
+          stroke={colors.primary}
+          strokeWidth={6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          strokeDasharray="22 66"
+          strokeDashoffset={innerStrokeDash}
+          rotation="-100"
+          origin="17, 17"
+        />
+      </Svg>
+
+      {/* Text */}
+      <Animated.Text
         style={[
-          styles.flameLeft,
-          {
-            opacity: opacityAnim1,
-            transform: [{ scale: scaleAnim2 }, { rotate: '45deg' }],
-          },
+          styles.loadingText,
+          { color: colors.primary, opacity: textOpacity },
         ]}
       >
-        <LinearGradient
-          colors={[colors.primary, colors.secondary]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.flameGradient}
-        />
-      </Animated.View>
-
-      {/* Right flame */}
-      <Animated.View
-        style={[
-          styles.flameRight,
-          {
-            opacity: opacityAnim1,
-            transform: [{ scale: scaleAnim3 }, { rotate: '45deg' }],
-          },
-        ]}
-      >
-        <LinearGradient
-          colors={[colors.secondary, colors.accent]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.flameGradient}
-        />
-      </Animated.View>
-
-      {/* Center main flame */}
-      <Animated.View
-        style={[
-          styles.flameCenter,
-          {
-            opacity: opacityAnim1,
-            transform: [{ scale: scaleAnim1 }, { rotate: '45deg' }],
-          },
-        ]}
-      >
-        <LinearGradient
-          colors={[colors.primary, colors.secondary, colors.accent]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.flameGradient}
-        />
-      </Animated.View>
-
-      {/* Bottom glow */}
-      <View style={[styles.bottomGlow, { backgroundColor: colors.primary + '30' }]} />
+        Loading
+      </Animated.Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: 100,
-    height: 100,
+    width: 86,
+    height: 120,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
-  flameCenter: {
+  circleOuter: {
     position: 'absolute',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    top: 0,
   },
-  flameLeft: {
+  circleMiddle: {
     position: 'absolute',
-    width: 45,
-    height: 45,
-    borderRadius: 22.5,
-    left: -5,
-    top: 10,
+    top: 13,
   },
-  flameRight: {
+  circleInner: {
     position: 'absolute',
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    right: -5,
-    top: 10,
+    top: 26,
   },
-  flameGradient: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 30,
-    shadowColor: '#3B82F6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  outerRing: {
+  loadingText: {
     position: 'absolute',
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-  },
-  ringGradient: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 45,
-    borderWidth: 3,
-    borderColor: 'transparent',
-  },
-  particle: {
-    position: 'absolute',
-    top: 50,
-  },
-  particleDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    shadowColor: '#3B82F6',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  bottomGlow: {
-    position: 'absolute',
-    bottom: 15,
-    width: 70,
-    height: 20,
-    borderRadius: 35,
-    opacity: 0.6,
+    bottom: 0,
+    fontSize: 14,
+    fontWeight: '500',
+    letterSpacing: 0.2,
+    textTransform: 'lowercase',
   },
 });
