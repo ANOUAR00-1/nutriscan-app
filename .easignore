@@ -13,3 +13,4 @@ bun.lock
 # Ignore docs
 *.md
 !README.md
+ONBOARDING_TEST_CHECKLIST.md

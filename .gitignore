@@ -39,3 +39,11 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 .vercel
+# Deployment related files
+DEPLOYMENT_COMMANDS.md
+ONBOARDING_TEST_CHECKLIST.md
+ONBOARDING_FIXES_APPLIED.md
+QUICK_TEST_GUIDE.md
+API_KEYS_SETUP.md
+LOADING_ANIMATION_UPDATE.md
+QUICK_TEST_GUIDE.md
