@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/hooks/useTheme";
+import LoadingAnimation from "@/components/LoadingAnimation";
 
 interface LoaderFiveProps {
   text?: string;
@@ -12,7 +13,7 @@ export function LoaderFive({ text = "Loading..." }: LoaderFiveProps) {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.loaderContainer, { backgroundColor: colors.surface }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
+        <LoadingAnimation />
         <Text style={[styles.loadingText, { color: colors.text }]}>
           {text}
         </Text>
@@ -29,19 +30,21 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   loaderContainer: {
-    padding: 40,
-    borderRadius: 20,
+    padding: 50,
+    borderRadius: 24,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+    minWidth: 250,
   },
   loadingText: {
-    marginTop: 20,
-    fontSize: 16,
+    marginTop: 32,
+    fontSize: 17,
     fontWeight: "600",
     textAlign: "center",
+    letterSpacing: 0.3,
   },
 });
