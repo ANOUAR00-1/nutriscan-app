@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { Clock, Trash2, Search, Filter, X, TrendingDown, TrendingUp } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 import { useMeals } from "@/contexts/MealsContext";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -40,15 +41,28 @@ export default function HistoryScreen() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    Alert.alert(t('delete'), "Are you sure you want to delete this meal scan?", [
-      { text: t('cancel'), style: "cancel" },
-      {
-        text: t('delete'),
-        style: "destructive",
-        onPress: () => deleteMeal(id),
-      },
-    ]);
+  const handleDelete = (id: string, foodName: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    
+    Alert.alert(
+      t('delete'),
+      `Are you sure you want to delete "${foodName}"? This action cannot be undone.`,
+      [
+        { 
+          text: t('cancel'), 
+          style: "cancel",
+          onPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+        },
+        {
+          text: t('delete'),
+          style: "destructive",
+          onPress: async () => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            await deleteMeal(id);
+          },
+        },
+      ]
+    );
   };
 
   const handleMealPress = (meal: MealScan) => {
@@ -119,8 +133,12 @@ export default function HistoryScreen() {
             <Text style={[styles.foodName, { color: colors.text }]} numberOfLines={1}>
               {item.foodItems.map((f) => f.name).join(", ") || "Unknown Food"}
             </Text>
-            <TouchableOpacity onPress={() => handleDelete(item.id)} hitSlop={8}>
-              <Trash2 size={20} color={colors.textLight} strokeWidth={2} />
+            <TouchableOpacity 
+              onPress={() => handleDelete(item.id, item.foodItems.map((f) => f.name).join(", ") || "this meal")} 
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              activeOpacity={0.6}
+            >
+              <Trash2 size={20} color={colors.danger} strokeWidth={2} />
             </TouchableOpacity>
           </View>
 
